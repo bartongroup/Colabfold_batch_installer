@@ -1,21 +1,23 @@
 name: colabfold_batch
 channels:
+  - nodefaults
   - bioconda
   - conda-forge
 dependencies:
-  - python=3.10
-  - pip
-  - openmm=7.7.0
-  - cudatoolkit=11.8.0
-  - pdbfixer=1.8.1
-  - kalign2=2.04
-  - hhsuite=3.3.0
-  - mmseqs2=14.7e284
-  - jax==0.3.25
-  - chex==0.1.6
-  - biopython==1.79
-  - git
-  - curl
+  - conda-forge::python=3.10
+  - conda-forge::pip
+  - conda-forge::openmm=7.7.0
+  - conda-forge::cudatoolkit=11.8.0
+  - conda-forge::pdbfixer=1.8.1
+  - bioconda::kalign2=2.04
+  - bioconda::hhsuite=3.3.0
+  - bioconda::mmseqs2=14.7e284
+  - conda-forge::jax=0.3.25
+  - conda-forge::jaxlib=0.3.25
+  - conda-forge::chex=0.1.6
+  - conda-forge::biopython=1.79
+  - conda-forge::git
+  - conda-forge::curl
   - pip:
     - nvidia-cudnn-cu11==8.6.0.163
     - tensorflow==2.12.*
