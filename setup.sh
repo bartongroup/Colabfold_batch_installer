@@ -12,11 +12,12 @@ set -e
 [[ "$(which conda 2>/dev/null)" ]] && CONDA='conda'
 [[ "$(which mamba 2>/dev/null)" ]] && CONDA='mamba'
 
+inDockerBuild=`uname -a|(grep -c buildkit || true)`
+
 if [[ -z "${CONDA}" ]]; then
 	echo "Please install Miniconda3 or mamba prior to running this script..."
 	exit 1
 else
-	echo "Using existing ${CONDA} installation..."
 	source $CONDA_PREFIX/etc/profile.d/conda.sh
 
 	$CONDA env create -f colabfold_batch.yaml
@@ -38,7 +39,13 @@ else
 	sed -i -e "s#appdirs.user_cache_dir(__package__ or \"colabfold\")#\"${CONDA_PREFIX}/share/colabfold\"#g" download.py
 	rm -rf __pycache__
 	
-	cd ${CONDA_PREFIX}/share
-	mkdir -p colabfold
-	python -m colabfold.download
+	if [[ "$inDockerBuild" == '1' ]]; then
+		echo "Skipping download of alphafold weights"
+		mamba clean -a -y
+		pip cache purge
+	else
+		cd ${CONDA_PREFIX}/share
+		mkdir -p colabfold
+		python -m colabfold.download
+	fi
 fi
