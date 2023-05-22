@@ -2,8 +2,6 @@
 
 set -e
 
-#colabfold_version='v1.5.2'
-
 # Inspired by https://github.com/YoshitakaMo/localcolabfold, with the 
 # hopefully added bonus of producing a functioning installation on 
 # our infrastructure...
@@ -32,7 +30,6 @@ else
 	echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib' >> $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
 
 	py_ver=$(python --version|cut -f2 -d' '|sed 's/\.[0-9]*$//')
-
 	cd $CONDA_PREFIX/lib/python${py_ver}/site-packages/colabfold
 
 	# Use matplotlib Agg backend for headless operation
