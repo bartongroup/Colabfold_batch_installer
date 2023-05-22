@@ -4,20 +4,22 @@ channels:
   - bioconda
   - conda-forge
 dependencies:
-  - conda-forge::python=3.10
+  - conda-forge::python=3.9
   - conda-forge::pip
-  - conda-forge::openmm=7.7.0
+  - conda-forge::openmm=7.5.1
   - conda-forge::cudatoolkit=11.8.0
-  - conda-forge::pdbfixer=1.8.1
+  - conda-forge::pdbfixer=1.7
   - bioconda::kalign2=2.04
   - bioconda::hhsuite=3.3.0
   - bioconda::mmseqs2=14.7e284
-  - conda-forge::jax=0.3.25
-  - conda-forge::jaxlib=0.3.25
-  - conda-forge::chex=0.1.6
+  - conda-forge::jax=0.4.10
+  - conda-forge::jaxlib=0.4.10=cuda*
+  - conda-forge::chex=0.1.7
+  - nvidia::cuda-nvcc=12.1.105
   - conda-forge::biopython=1.79
   - conda-forge::git
   - conda-forge::curl
   - pip:
     - nvidia-cudnn-cu11==8.6.0.163
     - tensorflow==2.12.*
+    - colabfold[alphafold-minus-jax]@git+https://github.com/sokrypton/ColabFold.git@v1.5.2
