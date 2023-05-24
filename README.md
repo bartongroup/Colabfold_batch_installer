@@ -13,10 +13,13 @@ This repository contains a simplified method of installing [colabfold](https://g
 1. Obtain a copy of this repository either using git i.e.  
 `git clone git://github.com/bartongroup/JCA_colabfold_batch.git`  
 or by downloading a release tarball from the link on the right under 'Releases'. Copy this tarball onto the cluster filesystem and extract with  
-`tar zxvf xxxxxx.tar.gz`
+`tar zxvf v1.5.2-beta1.tar.gz`
 
-2. Change into the directory which is created by step 1 - this will have the repository name if cloned from git, or the version number if obtained from a Release tarball.  
-`cd Colabfold_batch_installer`  or `cd v1.5.2`
+2. Change into the directory which is created by step 1 - this will have the repository name if cloned from git, or the version number if obtained from a Release tarball.
+a)  From a repository clone:  
+`cd Colabfold_batch_installer`
+b) From a release tarball:  
+`cd Colabfold_batch_installer-1.5.2-beta1`
 
 3. Run the setup script:  
 `./setup.sh`  
