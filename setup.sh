@@ -38,13 +38,12 @@ else
 	sed -i -e "s#appdirs.user_cache_dir(__package__ or \"colabfold\")#\"${CONDA_PREFIX}/share/colabfold\"#g" download.py
 	rm -rf __pycache__
 	
+	cd ${CONDA_PREFIX}/share
+	mkdir -m 0777 -p colabfold
+	python -m colabfold.download
+
 	if [[ "$inDockerBuild" == '1' ]]; then
-		echo "Skipping download of alphafold weights"
 		mamba clean -a -y
 		pip cache purge
-	else
-		cd ${CONDA_PREFIX}/share
-		mkdir -p colabfold
-		python -m colabfold.download
 	fi
 fi
