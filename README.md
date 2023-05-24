@@ -16,7 +16,7 @@ or by downloading a release tarball from the link on the right under 'Releases'.
 `tar zxvf xxxxxx.tar.gz`
 
 2. Change into the directory which is created by step 1 - this will have the repository name if cloned from git, or the version number if obtained from a Release tarball.  
-`cd JCA_colabfold_batch`  or `cd v1.5.2`
+`cd Colabfold_batch_installer`  or `cd v1.5.2`
 
 3. Run the setup script:  
 `./setup.sh`  
