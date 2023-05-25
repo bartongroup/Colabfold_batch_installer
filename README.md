@@ -14,6 +14,7 @@ This is temporarily available in `/cluster/gjb_lab/jabbott/singularity` until a 
 *  Anaconda/Miniconda3/Mamba installation. The installation script will preferentially use mamba to carry out the installation, but will fallback to conda if this is not available. If you don't already have a conda installation, see [The Cluster Wiki](https://teams.microsoft.com/l/channel/19%3A63a2d1d10e5346c79d8b35dec6006a40%40thread.tacv2/tab%3A%3A8ac3086d-c08d-426b-9140-4890bb613c19?groupId=4153042c-375d-4caa-a654-d691f65da8bb&tenantId=ae323139-093a-4d2a-81a6-5d334bcd9019&allowXTenantAccess=false) for instructions on setting this up.
 *  Approximately 14 Gb free disk space. This is mostly required for storing the alphafold weights
 *  git (optional)
+*  About 15 minutes of your life
 
 ## Installation
 
