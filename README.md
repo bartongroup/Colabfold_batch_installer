@@ -49,6 +49,10 @@ Resulting job logs will be written into a subdirectory of the submission directo
 
 **N.B. There are known issues with alphafold in relaxing models using Amber on GPUs - if this fails, omit the `--use-gpu-relax` argument and run amber only on CPUs - This part of the process on CPUs doesn't seem overly slow**
 
+## Limitations
+
+At present we do not have an in-house MMSeq2 server, so queries are directed to the default public server, which has limited capacity. Also bear in mind that use of a public resource would expose data externally which may not be appropriate.
+
 ## Expected Warnings
 Some warnings are expected within the log files, and do not necessarily mean something has gone wrong.
 
