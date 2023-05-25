@@ -17,7 +17,7 @@ or by downloading a release tarball from the link on the right under 'Releases'.
 
 2. Change into the directory which is created by step 1 - this will have the repository name if cloned from git, or the version number if obtained from a Release tarball.
 a)  From a repository clone:  
-`cd Colabfold_batch_installer`
+`cd Colabfold_batch_installer`  
 b) From a release tarball:  
 `cd Colabfold_batch_installer-1.5.2-beta1`
 
