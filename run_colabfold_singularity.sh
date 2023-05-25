@@ -59,7 +59,8 @@ fasta_file=$(basename $input)
 
 echo "Hostname: $HOSTNAME"
 echo "GPU: $CUDA_VISIBLE_DEVICES"
-echo "Command line: colabfold_batch ${colabfold_args_list[@]} ${input} colabfold_outputs"
+# This is a bit of a lie, but is the effective command run taking bind mounts into account...
+echo "Command line: colabfold_batch ${colabfold_args_list[@]} ${input} ${input_dir}/colabfold_outputs"
 
 export TF_CPP_MIN_LOG_LEVEL=2
 singularity exec --nv -B ${input_dir}:/mnt ${image} \

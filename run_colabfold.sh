@@ -49,8 +49,10 @@ fi
 
 echo "Hostname: $HOSTNAME"
 echo "GPU: $CUDA_VISIBLE_DEVICES"
-echo "Command line: 'colabfold_batch  ${colabfold_args_list[@]} ${input} colabfold_outputs"
+echo "Command line: colabfold_batch  ${colabfold_args_list[@]} ${input} ${input_dir}/colabfold_outputs"
+
+input_dir=$(dirname $input)
 
 TF_CPP_MIN_LOG_LEVEL=2
-colabfold_batch ${colabfold_args_list[@]} ${input} colabfold_outputs
+colabfold_batch ${colabfold_args_list[@]} ${input} ${input_dir}/colabfold_outputs
 
