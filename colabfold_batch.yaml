@@ -20,6 +20,6 @@ dependencies:
   - conda-forge::git
   - conda-forge::curl
   - pip:
-    - nvidia-cudnn-cu11==8.6.0.163
+    - nvidia-cudnn-cu11==8.8.*
     - tensorflow==2.12.*
     - colabfold[alphafold-minus-jax]@git+https://github.com/sokrypton/ColabFold.git@v1.5.2
