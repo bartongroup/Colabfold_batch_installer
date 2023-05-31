@@ -9,7 +9,7 @@
 
 set -e
 
-image='/cluster/gjb_lab/jabbott/singularity/colabfold_batch.1.5.2.sif'
+image='/cluster/gjb_lab/cdr/colabfold/colabfold_batch.1.5.2.sif'
 
 usage() {
 	echo "$0 -i /path/to/fasta/file [-c 'colabfold arguments']"
