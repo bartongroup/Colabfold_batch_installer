@@ -12,17 +12,31 @@ set -e
 image='/cluster/gjb_lab/cdr/colabfold/colabfold_batch.1.5.2.sif'
 
 usage() {
-	echo "$0 -i /path/to/fasta/file [-c 'colabfold arguments']"
+	echo "Usage: $0 -i /path/to/fasta/file [-c 'colabfold arguments'] [-h] [-u]"
+	echo
+	echo "Note that colabfold arguments passed via '-c' must be surrounded with quotes to ensure they are all passed to colabfold"
+	echo
+	echo "run $0 -u for colabfold_batch help"
+	echo
 	exit 1
 }
 
-while getopts "i:c:h" opt; do
+colabfold_usage() {
+	export TINI_SUBREAPER=1
+	singularity run ${image} colabfold_batch -h
+	exit 1
+}
+
+while getopts "i:c:uh" opt; do
 	case $opt in
 		i)
 			input=$OPTARG
 			;;
 		c)
 			colabfold_args=$OPTARG
+			;;
+		u)
+			colabfold_usage
 			;;
 		h)
 			usage
@@ -36,7 +50,7 @@ read -a colabfold_args_list <<< "$colabfold_args"
 
 for arg in "${colabfold_args_list[@]}"; do
 	if [[ "$arg" == "--use-gpu-relax" ]]; then
-	 	echo
+		echo
 		echo "WARNING: Running amber relaxation on GPUs is unreliable and may fail."
 		echo "Should this occur, rerun without --use-gpu-relax"
 		echo
@@ -63,5 +77,6 @@ echo "GPU: $CUDA_VISIBLE_DEVICES"
 echo "Command line: colabfold_batch ${colabfold_args_list[@]} ${input} ${input_dir}/colabfold_outputs"
 
 export TF_CPP_MIN_LOG_LEVEL=2
+export TINI_SUBREAPER=1
 singularity exec --nv -B ${input_dir}:/mnt ${image} \
 	colabfold_batch ${colabfold_args_list[@]} /mnt/${fasta_file} /mnt/colabfold_output

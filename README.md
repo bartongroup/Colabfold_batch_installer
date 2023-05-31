@@ -27,13 +27,13 @@ All necessary components are already available on the cluster.
 1. Obtain a copy of this repository either using git i.e.  
 `git clone git://github.com/bartongroup/JCA_colabfold_batch.git`  
 or by downloading a release tarball from the link on the right under 'Releases'. Copy this tarball onto the cluster filesystem and extract with  
-`tar zxvf v1.5.2-beta2.tar.gz`
+`tar zxvf v1.5.2-beta3.tar.gz`
 
 2. Change into the directory which is created by step 1 - this will have the repository name if cloned from git, or the version number if obtained from a Release tarball.
 a)  From a repository clone:  
 `cd Colabfold_batch_installer`  
 b) From a release tarball:  
-`cd Colabfold_batch_installer-1.5.2-beta2`
+`cd Colabfold_batch_installer-1.5.2-beta3`
 
 3. Run the setup script:  
 `./setup.sh`  
@@ -43,11 +43,13 @@ This will create a new conda environment named `colabfold_batch` based upon the 
 
 ### Singularity
 
-Usage: run_colabfold_singularity.sh -i /path/to/fasta/file [-c 'colabfold arguments']
+Usage: run_colabfold_singularity.sh -i /path/to/fasta/file [-c 'colabfold arguments'] [-h] [-u]
 
 The `run_colabfold_singularity.sh` script can be submitted directly to GridEngine, and requires at a minimun the path to an input fasta file. Any specific colabfold arguments can be provided using the `-c` argument. Log files will be written to a 'colabfold_logs' directory in the submission directory, while outputs will be written to a `colabfold_outputs` directory within the directory containing the submitted fasta file. 
 
-i.e. `qsub /path/to/run_colabfold.sh -i test/cadh5_arath.fa -c "--num-recycle 5 --amber --num-relax 5"`  
+i.e. `qsub /path/to/run_colabfold_singularity.sh -i test/cadh5_arath.fa -c "--num-recycle 5 --amber --num-relax 5"`  
+
+Full colabfold usage information can be found by running `run_colabfold_singularity.sh -u`
 
 ### Full Installation
 
@@ -72,6 +74,8 @@ Resulting job logs will be written into a subdirectory of the submission directo
 *Make sure you check the log files for errors!*
 
 **N.B. There are known issues with alphafold in relaxing models using Amber on GPUs - if this fails, omit the `--use-gpu-relax` argument and run amber only on CPUs - This part of the process on CPUs doesn't seem overly slow**
+
+Full colabfold usage information can be found by running `run_colabfold.sh -u`
 
 ## Limitations
 
