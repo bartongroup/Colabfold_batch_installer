@@ -58,6 +58,12 @@ if [[ -z "$input" ]]; then
 	usage
 fi
 
+
+if [[ ! -e "$input" ]]; then
+	echo "Specified input file (${input} not found..."
+	exit 1
+fi
+
 echo "Hostname: $HOSTNAME"
 echo "GPU: $CUDA_VISIBLE_DEVICES"
 echo "Command line: colabfold_batch  ${colabfold_args_list[@]} ${input} ${input_dir}/colabfold_outputs"
