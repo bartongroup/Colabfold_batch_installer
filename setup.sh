@@ -22,7 +22,7 @@ else
 
 	# If installation is run on a non-gpu host, some cpu-centric packages will be installed instead
 	# of cuda packages. This can be fixed with the 'CONDA_OVERRIDE_CUDA' variabe...
-	CONDA_OVERRIDE_CUDA="11.8" $CONDA env create -f colabfold_batch.yaml
+	CONDA_OVERRIDE_CUDA="11.4" $CONDA env create -f colabfold_batch.yaml
 
 	source $(dirname $CONDA_EXE)/activate colabfold_batch
 

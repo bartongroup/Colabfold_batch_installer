@@ -12,14 +12,22 @@ dependencies:
   - bioconda::kalign2=2.04
   - bioconda::hhsuite=3.3.0
   - bioconda::mmseqs2=14.7e284
-  - conda-forge::jax=0.4.10
-  - conda-forge::jaxlib=0.4.10=cuda*
-  - conda-forge::chex=0.1.7
-  - nvidia::cuda-nvcc=12.1.105
+  - conda-forge::jax=0.3.25
+  - conda-forge::jaxlib=0.3.25=cuda*
+  - conda-forge::chex=0.0.7
+  - nvidia::cuda-nvcc=11.4.152
   - conda-forge::biopython=1.79
+  - conda-forge::immutabledict=2.0.0
+  - conda-forge::absl-py=1.0.0
+  - conda-forge::numpy=1.22.*
+  - conda-forge::pandas=1.3.4
+  - conda-forge::scipy=1.7.3
   - conda-forge::git
   - conda-forge::curl
   - pip:
     - nvidia-cudnn-cu11==8.8.*
-    - tensorflow==2.12.*
+    - tensorflow==2.12.0
+    - ml-collections==0.1.0
+    - dm-haiku==0.0.9
+    - dm-tree==0.1.6
     - colabfold[alphafold-minus-jax]@git+https://github.com/sokrypton/ColabFold.git@v1.5.2
