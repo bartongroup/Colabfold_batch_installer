@@ -275,5 +275,5 @@ distribute_db() {
 }
 
 
-#download_dbs
+download_dbs
 distribute_db
