@@ -6,9 +6,8 @@
 # are built on the same nodes as used for execution, then distributed 
 # to the remaining nodes
 
-#$ -cwd
 #$ -j y
-#$ -o db_setup_logs/$JOB_NAME.$JOB_ID
+#$ -o colabfold_db_logs/$JOB_NAME.$JOB_ID
 #$ -jc long
 #$ -adds l_hard gpu 1
 #$ -adds l_hard cuda.0.name 'NVIDIA A40'
@@ -31,7 +30,6 @@ echo "HOSTNAME=$HOSTNAME"
 
 ARIA_NUM_CONN=8
 
-orig_dir=$(pwd)
 db_dir=/opt/colabfold/${VERSION}
 mkdir -p $db_dir
 cd $db_dir
@@ -163,7 +161,7 @@ create_wrapper() {
 
   extra_args=""
   if [[ ! -z "$hold" ]]; then
-    extra_args="#$ -hold_jid $hold"
+    extra_args="## -hold_jid $hold"
   fi
 
   script="${TMPDIR}/sync_$target_node.sh"
@@ -175,10 +173,9 @@ cat<<EOF > $script
 #!/bin/env bash
 
 ## -mods l_hard hostname ${target_node}
-## -cwd
 ## -N colabfold_mirror
 ## -j y
-## -o $orig_dir/db_setup_logs/\$JOB_NAME.\$JOB_ID
+## -o $HOME/colabfold_db_logs/\$JOB_NAME.\$JOB_ID
 $extra_args
 
 source ~/miniconda3/etc/profile.d/conda.sh
@@ -226,8 +223,8 @@ distribute_db() {
 
   for node in ${nodes[@]}; do
     nodename=$(printf "gpu-%s.compute.dundee.ac.uk" "$node")
-    # qhost will return '-' in all fields if a node is offline...
-    status=$( qhost -h $nodename |tail -n +4|awk '{print $3}')
+    # qhost will return '-' in NLOAD field if a node is offline or uncommunicative...
+    status=$( qhost -h $nodename |tail -n +4|awk '{print $7}')
     if [[ "$status" == '-' ]]; then
       echo "Warning: $nodename is down..."
       bad_nodes+=($node)
