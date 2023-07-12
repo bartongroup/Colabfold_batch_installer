@@ -180,7 +180,7 @@ $extra_args
 
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate mmseqs2
-rsync -e 'ssh -oStrictHostKeyChecking=no' -av $source_node:/opt/colabfold/ /opt/colabfold
+rsync -e 'ssh -oStrictHostKeyChecking=no' --rsync-path=$CONDA_PREFIX/bin/rsync -av $source_node:/opt/colabfold/ /opt/colabfold
 EOF
 
   sed -i 's/##/#$/' $script
@@ -204,8 +204,6 @@ EOF
 ######################################################################
 
 distribute_db() {
-
-
 
   # We need to exlude the current host since we already have the database
   # and are going to use this as a starting point...
