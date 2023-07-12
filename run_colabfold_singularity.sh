@@ -9,7 +9,8 @@
 
 set -e
 
-image='/cluster/gjb_lab/cdr/colabfold/colabfold_batch.1.5.2.sif'
+script_path=$(dirname ${BASH_SOURCE[0]})
+image=$(ls ${script_path}/*sif)
 
 usage() {
 	echo "Usage: $0 -i /path/to/fasta/file [-c 'colabfold arguments'] [-h] [-u]"
