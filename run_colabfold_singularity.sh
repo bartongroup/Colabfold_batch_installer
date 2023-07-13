@@ -2,6 +2,7 @@
 
 #$ -adds l_hard gpu 1
 #$ -adds l_hard cuda.0.name 'NVIDIA A40'
+#$ -pe smp 32
 #$ -j y
 #$ -N colabfold
 #$ -o colabfold_logs/$JOB_NAME.o$JOB_ID
@@ -9,13 +10,27 @@
 
 set -e
 
-script_path=$(dirname ${BASH_SOURCE[0]})
-image=$(ls ${script_path}/*sif)
+echo "Hostname: $HOSTNAME"
+echo "GPU: $CUDA_VISIBLE_DEVICES"
+
+# if modifying threads, also update '-pe smp' request above to match...
+THREADS=32
+
+export TF_CPP_MIN_LOG_LEVEL=2
+export TINI_SUBREAPER=1
+
+SCRIPT_PATH=$(dirname ${BASH_SOURCE[0]})
+IMAGE=$(ls ${SCRIPT_PATH}/*sif)
+
+# based on the image being named 'colabfold_batch.?.?.?.sif'...
+VERSION=$(echo $IMAGE|sed -r 's/.*colabfold_batch.([0-9\.]+).sif/\1/')
+DB_PATH="/opt/colabfold/${VERSION}"
 
 usage() {
-	echo "Usage: $0 -i /path/to/fasta/file [-c 'colabfold arguments'] [-h] [-u]"
+	echo "Usage: $0 -i /path/to/fasta/file [-c 'colabfold arguments'] [-m 'mmseq arguments'] [-h] [-u] [-s]"
 	echo
-	echo "Note that colabfold arguments passed via '-c' must be surrounded with quotes to ensure they are all passed to colabfold"
+	echo "Note that colabfold arguments and MMSeqs arguments passed via '-c' and '-m' must be surrounded with"
+	echo "quotes to ensure they are all passed to colabfold"
 	echo
 	echo "run $0 -u for colabfold_batch help"
 	echo
@@ -23,21 +38,31 @@ usage() {
 }
 
 colabfold_usage() {
-	export TINI_SUBREAPER=1
-	singularity run ${image} colabfold_batch -h
+	singularity run ${IMAGE} colabfold_batch -h
 	exit 1
 }
 
-while getopts "i:c:uh" opt; do
+mmseqs_search_usage() {
+	singularity run ${IMAGE} colabfold_search -h
+	exit 1
+}
+
+while getopts "i:c:m:ush" opt; do
 	case $opt in
 		i)
-			input=$OPTARG
+			INPUT=$OPTARG
 			;;
 		c)
-			colabfold_args=$OPTARG
+			COLABFOLD_ARGS=$OPTARG
+			;;
+		m)
+			MMSEQS_ARGS=$OPTARG
 			;;
 		u)
 			colabfold_usage
+			;;
+		s)
+			mmseqs_search_usage
 			;;
 		h)
 			usage
@@ -47,9 +72,10 @@ while getopts "i:c:uh" opt; do
 	esac
 done
 
-read -a colabfold_args_list <<< "$colabfold_args"
+read -a COLABFOLD_ARGS_LIST <<< "$COLABFOLD_ARGS"
+read -a MMSEQS_ARGS_LIST <<< "$MMSEQS_ARGS"
 
-for arg in "${colabfold_args_list[@]}"; do
+for arg in "${COLABFOLD_ARGS_LIST[@]}"; do
 	if [[ "$arg" == "--use-gpu-relax" ]]; then
 		echo
 		echo "WARNING: Running amber relaxation on GPUs is unreliable and may fail."
@@ -58,26 +84,45 @@ for arg in "${colabfold_args_list[@]}"; do
 	fi
 done
 
-if [[ -z "$input" ]]; then
+if [[ -z "$INPUT" ]]; then
 	usage
 fi
 
-if [[ ! -e "$input" ]]; then
-	echo "Specified input file (${input} not found..."
+if [[ ! -e "$INPUT" ]]; then
+	echo "Specified input file (${INPUT} not found..."
 	exit 1
 fi
 
-# We need to bind the path to the directory containing the input fasta file into the container
-# and also provide the filename...
-input_dir=$(dirname $input)
-fasta_file=$(basename $input)
+INPUT_DIR=$(dirname $INPUT)
+INPUT_FILE=$(basename $INPUT)
+SUFFIX="${INPUT_FILE##*.}"
 
-echo "Hostname: $HOSTNAME"
-echo "GPU: $CUDA_VISIBLE_DEVICES"
-# This is a bit of a lie, but is the effective command run taking bind mounts into account...
-echo "Command line: colabfold_batch ${colabfold_args_list[@]} ${input} ${input_dir}/colabfold_outputs"
+echo "INPUT_DIR=${INPUT_DIR}"
+echo "INPUT_FILE=${INPUT_FILE}"
 
-export TF_CPP_MIN_LOG_LEVEL=2
-export TINI_SUBREAPER=1
-singularity exec --nv -B ${input_dir}:/mnt ${image} \
-	colabfold_batch ${colabfold_args_list[@]} /mnt/${fasta_file} /mnt/colabfold_output
+mkdir -p colabfold_output
+
+if [[ "$SUFFIX" != 'a3m' ]]; then
+	SEQ_COUNT=$(grep -c '>' ${INPUT})
+	if [[ ${SEQ_COUNT} != "1" ]]; then
+		echo "Input file must be a fasta file containing 1 sequence, or an a3m formatted alignment"
+		exit 1
+	fi
+
+	# Extract final '|' separated field from seq id in case of uniprot format headers
+	SEQ_ID=$(grep '>' ${INPUT}|sed 's/>//'|awk '{print $1}')
+	SEQ_ID="${SEQ_ID##*|}"
+
+	singularity exec -B ${INPUT_DIR}:/mnt/input -B colabfold_output:/mnt/output -B $DB_PATH/:/mnt/db \
+		${IMAGE} colabfold_search --threads ${THREADS} ${MMSEQS_ARGS_LIST[@]} \
+		/mnt/input/${INPUT_FILE} /mnt/db /mnt/output/
+
+	mv colabfold_output/0.a3m colabfold_output/${SEQ_ID}.a3m
+	COLABFOLD_INPUT="/mnt/output/${SEQ_ID}.a3m"
+else
+	COLABFOLD_INPUT="/mnt/input/${INPUT_FILE}"
+fi
+echo "COLABFOLD_INPUT=$COLABFOLD_INPUT"
+
+singularity exec --nv -B ${INPUT_DIR}:/mnt/input -B colabfold_output:/mnt/output  ${IMAGE} \
+	colabfold_batch ${COLABFOLD_ARGS_LIST[@]} ${COLABFOLD_INPUT} /mnt/output
