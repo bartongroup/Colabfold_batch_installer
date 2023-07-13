@@ -24,7 +24,7 @@ VERSION=$(echo $IMAGE|sed -r 's/.*colabfold_batch.([0-9\.]+).sif/\1/')
 DB_ROOT="/opt/colabfold"
 
 usage() {
-	echo "Usage: $0 -i /path/to/fasta/file [-c 'colabfold arguments'] [-m 'mmseq arguments'] [-d database] [-h] [-u] [-s]"
+	echo "Usage: $0 -i /path/to/fasta/file [-c 'colabfold arguments'] [-m 'mmseq arguments'] [-h] [-u] [-s]"
 	echo
 	echo "-i: path to input fasta or a3m file"
 	echo "-m: Arguments to pass to mmseqs search phase (must be surrounded with quotes)"
