@@ -10,7 +10,6 @@
 
 set -e
 
-
 # if modifying threads, also update '-pe smp' request above to match...
 THREADS=32
 
@@ -72,6 +71,22 @@ while getopts "i:c:m:ush" opt; do
 	esac
 done
 
+if [[ -z "$INPUT" ]]; then
+	usage
+fi
+
+if [[ ! -e "$INPUT" ]]; then
+	echo "Specified input file (${INPUT} not found..."
+	exit 1
+fi
+
+if [[ -z "${JOB_ID}" || "${REQUEST}" == "QRLOGIN" ]]; then
+	echo "This script must be submitted as a batch job to the scheduler"
+	echo "i.e. qsub $@"
+
+	exit 1
+fi
+
 read -a COLABFOLD_ARGS_LIST <<< "$COLABFOLD_ARGS"
 read -a MMSEQS_ARGS_LIST <<< "$MMSEQS_ARGS"
 
@@ -84,14 +99,7 @@ for arg in "${COLABFOLD_ARGS_LIST[@]}"; do
 	fi
 done
 
-if [[ -z "$INPUT" ]]; then
-	usage
-fi
 
-if [[ ! -e "$INPUT" ]]; then
-	echo "Specified input file (${INPUT} not found..."
-	exit 1
-fi
 
 INPUT_DIR=$(dirname $INPUT)
 INPUT_FILE=$(basename $INPUT)
