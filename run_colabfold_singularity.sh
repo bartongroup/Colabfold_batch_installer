@@ -10,8 +10,6 @@
 
 set -e
 
-echo "Hostname: $HOSTNAME"
-echo "GPU: $CUDA_VISIBLE_DEVICES"
 
 # if modifying threads, also update '-pe smp' request above to match...
 THREADS=32
@@ -99,6 +97,8 @@ INPUT_DIR=$(dirname $INPUT)
 INPUT_FILE=$(basename $INPUT)
 SUFFIX="${INPUT_FILE##*.}"
 
+echo "Hostname: $HOSTNAME"
+echo "GPU: $CUDA_VISIBLE_DEVICES"
 echo "INPUT_DIR=${INPUT_DIR}"
 echo "INPUT_FILE=${INPUT_FILE}"
 
