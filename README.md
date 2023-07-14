@@ -1,4 +1,4 @@
-# Colabfold_batch Installer
+![image](https://github.com/bartongroup/Colabfold_batch_installer/assets/5315529/02a859db-4350-4d13-8ab8-5d1f76fdaee9)# Colabfold_batch Installer
 
 This repository contains a simplified method of installing [colabfold](https://github.com/sokrypton/ColabFold) for local UoD use, which is loosely based on [localcolabfold](https://github.com/YoshitakaMo/localcolabfold). Colabfold provides a greatly accelerated structure prediction compared to the 'traditional' alphafold approach by replacing the Hmmer/HHblits homology searches with a much faster MMSeqs2 based method - see [the colabfold paper](https://doi.org/10.1038/s41592-022-01488-1). The localcolabfold installation does not work out of the box in our environment, so this is a streamlined installation which should produce a functional installation by running a single setup script.
 
@@ -8,7 +8,7 @@ This repository contains a simplified method of installing [colabfold](https://g
 
 * Nothing inparticular - The UoD HPC cluster provides Singularity access, including on CUDA-enabled GPU nodes appropriate for running colabfold. 
 
-This is temporarily available in `/cluster/gjb_lab/cdr/colabfold` until a better home can be found for it...
+This is available in `/cluster/sw/colabfold` until a better home can be found for it...
 
 ### Full Installation
 *  Anaconda/Miniconda3/Mamba installation. The installation script will preferentially use mamba to carry out the installation, but will fallback to conda if this is not available. If you don't already have a conda installation, see [The Cluster Wiki](https://teams.microsoft.com/l/channel/19%3A63a2d1d10e5346c79d8b35dec6006a40%40thread.tacv2/tab%3A%3A8ac3086d-c08d-426b-9140-4890bb613c19?groupId=4153042c-375d-4caa-a654-d691f65da8bb&tenantId=ae323139-093a-4d2a-81a6-5d334bcd9019&allowXTenantAccess=false) for instructions on setting this up.
@@ -43,9 +43,9 @@ This will create a new conda environment named `colabfold_batch` based upon the 
 
 ### Singularity
 
-Usage: run_colabfold_singularity.sh -i /path/to/fasta/file [-c 'colabfold arguments'] [-h] [-u]
+Usage: /cluster/sw/colabfold/current/colabfold.sh -i /path/to/fasta/file [-c 'colabfold arguments'] [-h] [-u]
 
-The `run_colabfold_singularity.sh` script can be submitted directly to GridEngine, and requires at a minimun the path to an input fasta file. Any specific colabfold arguments can be provided using the `-c` argument. Log files will be written to a 'colabfold_logs' directory in the submission directory, while outputs will be written to a `colabfold_outputs` directory within the directory containing the submitted fasta file. 
+The `colabfold.sh` script can be submitted directly to GridEngine, and requires at a minimun the path to an input fasta file. Any specific colabfold arguments can be provided using the `-c` argument. Log files will be written to a 'colabfold_logs' directory in the submission directory, while outputs will be written to a `colabfold_outputs` directory within the directory containing the submitted fasta file. 
 
 i.e. `qsub /path/to/run_colabfold_singularity.sh -i test/cadh5_arath.fa -c "--num-recycle 5 --amber --num-relax 5"`  
 
@@ -79,7 +79,7 @@ Full colabfold usage information can be found by running `run_colabfold.sh -u`
 
 ## Limitations
 
-At present we do not have an in-house MMSeq2 server, so queries are directed to the default public server, which has limited capacity. Also bear in mind that use of a public resource would expose data externally which may not be appropriate.
+The GPU nodes which are capable of running colabfold were funded through a BBSRC ALERT bid for training machine learning models. Usage of these nodes will be monitored by DTS and it may necessary to impose limits on their usage if workloads are interfering with the primary function of these nodes. Groups with high demands for colabfold should consider contributing appropriate hardware to the cluster to support their requirements.
 
 ## Expected Warnings
 Some warnings are expected within the log files, and do not necessarily mean something has gone wrong.
