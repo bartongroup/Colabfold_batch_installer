@@ -12,16 +12,17 @@ set -e
 
 # if modifying threads, also update '-pe smp' request above to match...
 THREADS=32
+INSTALL_DIR="/cluster/sw/colabfold/current"
+DB_PATH="/opt/colabfold/current"
 
 export TF_CPP_MIN_LOG_LEVEL=2
 export TINI_SUBREAPER=1
 
 SCRIPT_PATH=$(dirname ${BASH_SOURCE[0]})
-IMAGE=$(ls ${SCRIPT_PATH}/*sif)
+IMAGE=$(ls ${INSTALL_DIR}/*sif)
 
 # based on the image being named 'colabfold_batch.?.?.?.sif'...
 VERSION=$(echo $IMAGE|sed -r 's/.*colabfold_batch.([0-9\.]+).sif/\1/')
-DB_ROOT="/opt/colabfold"
 
 usage() {
 	echo "Usage: $0 -i /path/to/fasta/file [-c 'colabfold arguments'] [-m 'mmseq arguments'] [-h] [-u] [-s]"
@@ -99,8 +100,6 @@ for arg in "${COLABFOLD_ARGS_LIST[@]}"; do
 	fi
 done
 
-
-
 INPUT_DIR=$(dirname $INPUT)
 INPUT_FILE=$(basename $INPUT)
 SUFFIX="${INPUT_FILE##*.}"
@@ -109,6 +108,8 @@ echo "Hostname: $HOSTNAME"
 echo "GPU: $CUDA_VISIBLE_DEVICES"
 echo "INPUT_DIR=${INPUT_DIR}"
 echo "INPUT_FILE=${INPUT_FILE}"
+echo "DB_PATH=${DB_PATH}"
+echo "VERSION=${VERSION}"
 
 mkdir -p colabfold_output
 

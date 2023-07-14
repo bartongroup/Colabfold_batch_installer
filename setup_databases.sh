@@ -30,9 +30,8 @@ echo "HOSTNAME=$HOSTNAME"
 
 ARIA_NUM_CONN=8
 
-db_dir=/opt/colabfold/${VERSION}
-mkdir -p $db_dir
-cd $db_dir
+db_dir="/opt/colabfold/${VERSION}"
+discoba_dir="/opt/colabfold/discoba"
 
 ######################################################################
 #
@@ -62,7 +61,7 @@ downloadFile() {
 
 ######################################################################
 #
-# download_dbs
+# download_colabfold_dbs
 #
 # Carries out parallel download of required databases
 #
@@ -71,7 +70,11 @@ downloadFile() {
 #
 ######################################################################
 
-download_dbs() {
+download_colabfold_db() {
+
+  mkdir -p $db_dir
+  cd $db_dir
+
   {
     if [ ! -f UNIREF30_READY ]; then
       downloadFile "https://wwwuser.gwdg.de/~compbiol/colabfold/uniref30_2202.tar.gz" "uniref30_2202.tar.gz"
@@ -137,6 +140,34 @@ download_dbs() {
 
 ######################################################################
 #
+# download_discoba_db
+#
+# Downloads Discoba-specific database (https://doi.org/10.5281/zenodo.5563073)
+# from Wheeler (https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0259871)
+# 
+# Required argumnents: None
+#
+# Returns: None
+#
+######################################################################
+
+download_discoba_db() {
+
+  mkdir -p $discoba_dir
+  cd $discoba_dir
+
+  if [ ! -f DISCOBA_READY ]; then
+    downloadFile "https://zenodo.org/record/5682928/files/discoba.fasta.gz?download=1" "discoba.fasta.gz"
+    mmseqs createdb discoba.fasta.gz discoba
+    mmseqs createindex discoba tmp4 --remove-tmp-files 1
+    rm -r tmp4
+    rm -f discoba.fasta.gz
+    touch DISCOBA_READY
+  fi
+}
+
+######################################################################
+#
 # create_wrapper
 #
 # Generates a shell script for qsubbing each rsync job. 
@@ -180,7 +211,7 @@ $extra_args
 
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate mmseqs2
-rsync -e 'ssh -oStrictHostKeyChecking=no' --rsync-path=$CONDA_PREFIX/bin/rsync -av $source_node:/opt/colabfold/ /opt/colabfold
+rsync -e 'ssh -oStrictHostKeyChecking=no' --rsync-path=$CONDA_PREFIX/bin/rsync --delete -av $source_node:/opt/colabfold/ /opt/colabfold
 EOF
 
   sed -i 's/##/#$/' $script
@@ -216,7 +247,6 @@ distribute_db() {
   # the nodes return, rather than having live nodes waiting on a job to complete
   # on a node which is down
 
-  echo ${nodes[@]}
   declare -a bad_nodes
 
   for node in ${nodes[@]}; do
@@ -229,6 +259,8 @@ distribute_db() {
     fi
   done
 
+  # remove 'bad nodes' from the list and append them again
+  # at the end to ensure they are not dependancies for other jobs
   for bad_node in ${bad_nodes[@]}; do
     nodes=( "${nodes[@]/$bad_node}" )
     nodes+=($bad_node)
@@ -270,5 +302,6 @@ distribute_db() {
 }
 
 
-download_dbs
+download_colabfold_db
+download_discoba_db
 distribute_db
