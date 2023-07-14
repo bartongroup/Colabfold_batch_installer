@@ -1,4 +1,4 @@
-![image](https://github.com/bartongroup/Colabfold_batch_installer/assets/5315529/02a859db-4350-4d13-8ab8-5d1f76fdaee9)# Colabfold_batch Installer
+# Colabfold_batch Installer
 
 This repository contains a simplified method of installing [colabfold](https://github.com/sokrypton/ColabFold) for local UoD use, which is loosely based on [localcolabfold](https://github.com/YoshitakaMo/localcolabfold). Colabfold provides a greatly accelerated structure prediction compared to the 'traditional' alphafold approach by replacing the Hmmer/HHblits homology searches with a much faster MMSeqs2 based method - see [the colabfold paper](https://doi.org/10.1038/s41592-022-01488-1). The localcolabfold installation does not work out of the box in our environment, so this is a streamlined installation which should produce a functional installation by running a single setup script.
 
