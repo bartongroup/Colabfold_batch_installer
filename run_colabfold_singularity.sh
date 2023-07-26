@@ -83,7 +83,7 @@ fi
 
 if [[ -z "${JOB_ID}" || "${REQUEST}" == "QRLOGIN" ]]; then
 	echo "This script must be submitted as a batch job to the scheduler"
-	echo "i.e. qsub $@"
+	echo "i.e. qsub $0 $@"
 
 	exit 1
 fi
@@ -110,6 +110,8 @@ echo "INPUT_DIR=${INPUT_DIR}"
 echo "INPUT_FILE=${INPUT_FILE}"
 echo "DB_PATH=${DB_PATH}"
 echo "VERSION=${VERSION}"
+echo "MMSEQS_ARGS=${MMSEQS_ARGS[@]}"
+echo "COLABFOLD_ARGS=${COLABFOLD_ARGS[@]}"
 
 mkdir -p colabfold_output
 
