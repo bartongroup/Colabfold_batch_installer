@@ -212,6 +212,9 @@ $extra_args
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate mmseqs2
 rsync -e 'ssh -oStrictHostKeyChecking=no' --rsync-path=$CONDA_PREFIX/bin/rsync --delete -av $source_node:/opt/colabfold/ /opt/colabfold
+find /opt/colabfold -type d -exec chmod 0755 {} \;
+find /opt/colabfold -type f -exec chmod 0644 {} \;
+
 EOF
 
   sed -i 's/##/#$/' $script
