@@ -2,6 +2,8 @@
 
 #$ -adds l_hard gpu 1
 #$ -adds l_hard cuda.0.name 'NVIDIA A40'
+#$ -mods l_hard h_vmem 350G
+#$ -mods l_hard mem_free 350G
 #$ -pe smp 32
 #$ -j y
 #$ -N colabfold
