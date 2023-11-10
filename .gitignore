@@ -1,5 +1,6 @@
 colabfold_logs
-colabfold_outputs
+colabfold_output
 db_setup_logs
 *tar
 *DS_Store
+*colabfold_stats.txt
