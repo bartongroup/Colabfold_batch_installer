@@ -180,7 +180,7 @@ if [[ "$SUFFIX" != 'fa' ]] && [[ "$SUFFIX" != 'fasta' ]]; then
 	exit 1
 else
 	SEQ_COUNT=$(grep -c '>' ${INPUT})
-	if [[ ${SEQ_COUNT} > "25" ]]; then
+	if [[ ${SEQ_COUNT} -gt 25 ]]; then
 		echo "Input file must be a fasta file containing up to 25 sequences."
 		echo "The provided file contains ${SEQ_COUNT} sequences"
 		exit 1
