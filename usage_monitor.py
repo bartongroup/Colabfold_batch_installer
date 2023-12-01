@@ -69,13 +69,15 @@ def to_bytes(usage):
 	suffix=usage[-1]
 
 	# non Mb or Gb values will have an int as the suffix...
-	if suffix=="M" or suffix=="G":
+	if suffix=="M" or suffix=="G" or suffix=="T":
 		usage=usage[:-1]
 
 	if suffix=="M":
 		bytes_usage=float(usage) * 1024 * 1024
 	elif suffix=="G":
-		bytes_usage=float(usage) * 1024 * 1024 *1024
+		bytes_usage=float(usage) * 1024 * 1024 * 1024
+	elif suffix=="T":
+		bytes_usage=float(usage) * 1024 * 1024 * 1024 * 1024
 	else:
 		bytes_usage=float(usage)
 
