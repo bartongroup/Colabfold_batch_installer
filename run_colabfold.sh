@@ -65,6 +65,7 @@ if [[ ! -e "$input" ]]; then
 fi
 
 echo "Hostname: $HOSTNAME"
+echo "Job ID: $SGE_JOB_ID"
 echo "GPU: $CUDA_VISIBLE_DEVICES"
 echo "Command line: colabfold_batch  ${colabfold_args_list[@]} ${input} ${input_dir}/colabfold_outputs"
 
