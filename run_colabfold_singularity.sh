@@ -115,10 +115,18 @@ echo "VERSION=${VERSION}"
 echo "MMSEQS_ARGS=${MMSEQS_ARGS[@]}"
 echo "COLABFOLD_ARGS=${COLABFOLD_ARGS[@]}"
 
+if [[ -d "colabfold_output" ]]; then 
+
+	rm -r colabfold_output
+fi
+
 mkdir -p colabfold_output
 
 if [[ "$SUFFIX" != 'a3m' ]]; then
+	# grep will exit with 1 if there are 0 hits so prevent script aborting before producing the error
+	set +e
 	SEQ_COUNT=$(grep -c '>' ${INPUT})
+	set -e
 	if [[ ${SEQ_COUNT} != "1" ]]; then
 		echo "Input file must be a fasta file containing 1 sequence, or an a3m formatted alignment"
 		exit 1
@@ -126,6 +134,7 @@ if [[ "$SUFFIX" != 'a3m' ]]; then
 
 	# Extract final '|' separated field from seq id in case of uniprot format headers
 	SEQ_ID=$(grep '>' ${INPUT}|sed 's/>//'|awk '{print $1}')
+
 	SEQ_ID="${SEQ_ID##*|}"
 
 	singularity exec -B ${INPUT_DIR}:/mnt/input -B colabfold_output:/mnt/output -B $DB_PATH/:/mnt/db \

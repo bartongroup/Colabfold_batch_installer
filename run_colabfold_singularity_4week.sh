@@ -120,7 +120,10 @@ echo "COLABFOLD_ARGS=${COLABFOLD_ARGS[@]}"
 mkdir -p colabfold_output
 
 if [[ "$SUFFIX" != 'a3m' ]]; then
+    # grep will exit with 1 if there are 0 hits so prevent script aborting before producing the error
+	set +e
 	SEQ_COUNT=$(grep -c '>' ${INPUT})
+	set -e
 	if [[ ${SEQ_COUNT} != "1" ]]; then
 		echo "Input file must be a fasta file containing 1 sequence, or an a3m formatted alignment"
 		exit 1
