@@ -97,8 +97,15 @@ echo "GPU: $CUDA_VISIBLE_DEVICES"
 echo "INPUT_FILE=${COLABFOLD_INPUT}"
 echo "COLABFOLD_ARGS=${COLABFOLD_ARGS[@]}"
 
-singularity exec --nv -B colabfold_output:/mnt/output ${IMAGE} \
-	colabfold_batch ${COLABFOLD_ARGS_LIST[@]} /mnt/output/${COLABFOLD_INPUT} /mnt/output
+COMPARISON=$(echo ${COLABFOLD_INPUT}|sed 's/.a3m//')
+
+mkdir -p colabfold_predictions/${COMPARISON}
+cp -v colabfold_output/${COLABFOLD_INPUT} $TMPDIR
+
+singularity exec --nv -B $TMPDIR:/mnt/output ${IMAGE} \
+	colabfold_batch ${COLABFOLD_ARGS_LIST[@]} $TMPDIR/${COLABFOLD_INPUT} $TMPDIR
+
+cp -v $TMPDIR/* colabfold_predictions/${COMPARISON}
 
 EOF
 
